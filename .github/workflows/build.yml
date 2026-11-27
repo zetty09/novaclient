@@ -1,34 +1,10 @@
 
-name: Build NOVA Client 1.8.9
+name: Build NOVA Client
 
 on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
   workflow_dispatch:
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Java 8
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
- 
-name: Build NOVA Client - Legacy Fabric 1.8.9
-
-on:
   push:
     branches: [main, master]
-  pull_request:
-    branches: [main, master]
-  workflow_dispatch:
 
 jobs:
   build:
@@ -44,18 +20,12 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '9.9.1'
-
-      - name: Build mod
+      - name: Build
         run: gradle build --no-daemon
 
       - name: Upload JAR
         uses: actions/upload-artifact@v4
         with:
-          name: NOVA-Legacy-Fabric-1.8.9
+          name: NOVA-Client
           path: build/libs/*.jar
           if-no-files-found: error
-
