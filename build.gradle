@@ -1,39 +1,46 @@
-buildscript {
-    repositories {
-        jcenter()
-        maven { url = "https://maven.minecraftforge.net/" }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
-    }
-}
-apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.0.0"
-group = "com.nova.client"
-archivesBaseName = "NOVA_CLIENT_1.8.9"
-
-sourceCompatibility = targetCompatibility = '1.8'
-compileJava {
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
-    options.encoding = 'UTF-8'
+plugins {
+    id 'fabric-loom' version "${loom_version}"
+    id 'legacy-looming' version "${loom_version}"
+    id 'maven-publish'
 }
 
-minecraft {
-    version = "1.8.9-11.15.1.2318-1.8.9"
-    runDir = "run"
-    mappings = "stable_22"
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings(legacy.yarn(project.minecraft_version, project.yarn_build))
+
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    modImplementation "net.legacyfabric.legacy-fabric-api:legacy-fabric-api:${project.fabric_version}"
 }
 
 processResources {
     inputs.property "version", project.version
-    inputs.property "mcversion", "1.8.9"
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-        expand 'version': project.version, 'mcversion': "1.8.9"
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
     }
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.release = 8
     }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    withSourcesJar()
 }
