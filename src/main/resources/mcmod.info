@@ -1,0 +1,16 @@
+[
+  {
+    "modid": "novaclient",
+    "name": "NOVA CLIENT",
+    "description": "A customizable client-side PvP HUD and tools mod for Minecraft 1.8.9.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": ["NOVA"],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
