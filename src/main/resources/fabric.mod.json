@@ -1,0 +1,19 @@
+
+{
+  "schemaVersion": 1,
+  "id": "novaclient",
+  "version": "${version}",
+  "name": "NOVA CLIENT",
+  "description": "NOVA Client for Minecraft 1.8.9",
+  "authors": ["NOVA"],
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.nova.client.NovaClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": "*",
+    "minecraft": "1.8.9"
+  }
+}
