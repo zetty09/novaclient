@@ -12,6 +12,9 @@
       "com.nova.client.NovaClient"
     ]
   },
+  "mixins": [
+    "novaclient.mixins.json"
+  ],
   "depends": {
     "fabricloader": "*",
     "minecraft": "1.8.9"
