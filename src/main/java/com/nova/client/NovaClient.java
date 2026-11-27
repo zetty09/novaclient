@@ -6,12 +6,7 @@ import com.nova.client.module.ModuleManager;
 import com.nova.client.util.NovaConfig;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
-
 import org.lwjgl.input.Keyboard;
 
 public class NovaClient implements ClientModInitializer {
@@ -20,28 +15,31 @@ public class NovaClient implements ClientModInitializer {
     public static final String NAME = "NOVA CLIENT";
     public static final String VERSION = "1.0.0";
 
-    public static KeyBinding openGui;
     public static final ModuleManager MODULES = new ModuleManager();
+
+    private boolean rightShiftWasDown = false;
 
     @Override
     public void onInitializeClient() {
         NovaConfig.load();
         MODULES.registerDefaults();
+    }
 
-        openGui = KeyBindingHelper.registerKeyBinding(
-            new KeyBinding(
-                "key.novaclient.opengui",
-                Keyboard.KEY_RSHIFT,
-                "category.novaclient"
-            )
-        );
+    // Wywoływane z mixina podczas ticku klienta.
+    public void onClientTick() {
+        Minecraft mc = Minecraft.getMinecraft();
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (openGui.isPressed()) {
-                Minecraft.getMinecraft().displayGuiScreen(
-                    new NovaClickGui()
-                );
-            }
-        });
+        if (mc.thePlayer == null) {
+            rightShiftWasDown = false;
+            return;
+        }
+
+        boolean down = Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
+
+        if (down && !rightShiftWasDown && mc.currentScreen == null) {
+            mc.displayGuiScreen(new NovaClickGui());
+        }
+
+        rightShiftWasDown = down;
     }
 }
